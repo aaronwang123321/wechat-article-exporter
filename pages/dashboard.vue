@@ -4,7 +4,7 @@
       <aside
           class="hidden md:flex flex-col h-screen w-[250px] flex-shrink-0 justify-between border-r border-slate-4 bg-slate-1 px-4 pb-6">
         <div class="flex items-center h-[60px]">
-          <NuxtLink to="/" class="px-2 font-bold text-xl">微信公众号文章导出</NuxtLink>
+          <NuxtLink to="/" class="px-2 font-bold text-xl text-gray-900 dark:text-gray-100">微信公众号文章导出</NuxtLink>
         </div>
 
         <!-- 导航菜单 -->
@@ -15,11 +15,11 @@
                   :to="item.href"
                   class="flex h-8 items-center gap-2 rounded-md px-2 text-sm"
                   :class="{
-                    'text-slate-11 hover:bg-slate-4 hover:text-slate-12': item.href !== route.fullPath,
-                    'text-slate-12 bg-slate-3 font-bold': item.href === route.fullPath,
+                    'text-gray-700 dark:text-gray-300 hover:bg-slate-4 hover:text-gray-900 dark:hover:text-gray-100': item.href !== route.fullPath,
+                    'text-gray-900 dark:text-gray-100 bg-slate-3 dark:bg-gray-700 font-bold': item.href === route.fullPath,
                   }"
               >
-                <div class="text-slate-11 opacity-80 w-[18px] h-[18px]">
+                <div class="text-gray-600 dark:text-gray-400 opacity-80 w-[18px] h-[18px]">
                   <component :is="item.icon" class="w-full h-full"/>
                 </div>
                 {{ item.name }}
@@ -29,7 +29,7 @@
         </nav>
 
         <!-- footer -->
-        <footer v-if="loginAccount" class="flex flex-col space-y-2 pt-3 border-t">
+        <footer v-if="loginAccount" class="flex flex-col space-y-2 pt-3 border-t border-gray-200 dark:border-gray-700">
           <div class="flex items-center space-x-2">
             <img v-if="loginAccount.avatar" :src="loginAccount.avatar" alt="" class="rounded-full size-10">
             <UTooltip v-if="loginAccount.nickname" class="flex-1 overflow-hidden"
@@ -37,14 +37,14 @@
               <template #text>
                 <span>{{ loginAccount.nickname }}</span>
               </template>
-              <span class="whitespace-nowrap text-ellipsis overflow-hidden">{{ loginAccount.nickname }}</span>
+              <span class="whitespace-nowrap text-ellipsis overflow-hidden text-gray-900 dark:text-gray-100">{{ loginAccount.nickname }}</span>
             </UTooltip>
 
             <UButton icon="i-heroicons-arrow-left-start-on-rectangle-16-solid" :loading="logoutBtnLoading"
                      class="bg-slate-10 hover:bg-rose-500 disabled:bg-rose-500" @click="logout">退出
             </UButton>
           </div>
-          <div class="mb-4 text-sm">
+          <div class="mb-4 text-sm text-gray-700 dark:text-gray-300">
             <span>token过期时间还剩: </span>
             <span class="font-mono" :class="warning ? 'text-rose-500' : 'text-green-500'">{{ distance }}</span>
           </div>
@@ -83,6 +83,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import {Album, ChartNoAxesCombined, Download, Globe, Settings, HeartHandshake} from 'lucide-vue-next';
 import {formatDistance} from "date-fns";
 import type {LogoutResponse} from "~/types/types";
