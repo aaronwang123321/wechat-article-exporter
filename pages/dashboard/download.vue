@@ -7,10 +7,10 @@
     <div class="flex flex-1 overflow-hidden">
 
       <!-- 公众号列表 -->
-      <ul class="flex flex-col h-full w-fit overflow-y-scroll divide-y">
+      <ul class="flex flex-col h-full w-fit overflow-y-scroll divide-y divide-gray-200 dark:divide-gray-700">
         <li v-for="accountInfo in sortedAccountInfos" :key="accountInfo.fakeid"
-            class="relative px-4 pr-16 py-4 hover:bg-slate-3 hover:cursor-pointer transition"
-            :class="{'bg-slate-3': selectedAccount === accountInfo.fakeid}" @click="toggleSelectedAccount(accountInfo)">
+            class="relative px-4 pr-16 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 hover:cursor-pointer transition text-gray-900 dark:text-gray-100"
+            :class="{'bg-gray-100 dark:bg-gray-800': selectedAccount === accountInfo.fakeid}" @click="toggleSelectedAccount(accountInfo)">
           <p>公众号:
             <span v-if="accountInfo.nickname" class="text-xl font-medium">{{ accountInfo.nickname }}</span>
           </p>
@@ -25,7 +25,7 @@
           <Loader :size="28" class="animate-spin text-slate-500"/>
         </div>
         <div class="relative" v-else-if="selectedAccount">
-          <div class="sticky top-0 z-50 bg-white flex justify-between items-center  px-4 h-[40px]">
+          <div class="sticky top-0 z-50 bg-white dark:bg-gray-900 flex justify-between items-center px-4 h-[40px] text-gray-900 dark:text-gray-100">
             <div class="flex items-center space-x-4">
               <span>过滤条件:</span>
               <UInput v-model="query.title" placeholder="请输入标题过滤" color="blue"/>
@@ -90,7 +90,7 @@
             </div>
           </div>
           <table class="w-full border-collapse">
-            <thead class="sticky top-[40px] z-10 h-[40px] bg-white">
+            <thead class="sticky top-[40px] z-10 h-[40px] bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             <tr>
               <th>
                 <UCheckbox class="justify-center" :indeterminate="isIndeterminate" v-model="checkAll"
@@ -105,8 +105,8 @@
               <th class="w-12">原文</th>
             </tr>
             </thead>
-            <tbody>
-            <tr v-for="(article, index) in displayedArticles" :key="article.aid">
+            <tbody class="text-gray-900 dark:text-gray-100">
+            <tr v-for="(article, index) in displayedArticles" :key="article.aid" class="hover:bg-gray-50 dark:hover:bg-gray-800">
               <td class="text-center" @click="toggleArticleCheck(article)">
                 <UCheckbox class="justify-center" v-model="article.checked" color="blue"/>
               </td>
@@ -119,11 +119,11 @@
               <td>
                 <p class="flex flex-wrap">
                   <span v-for="album in article.appmsg_album_infos" :key="album.id"
-                        class="text-blue-600 mr-2">#{{ album.title }}</span>
+                        class="text-blue-600 dark:text-blue-400 mr-2">#{{ album.title }}</span>
                 </p>
               </td>
               <td class="text-center">
-                <a class="text-blue-500 underline" :href="article.link" target="_blank">
+                <a class="text-blue-500 dark:text-blue-400 underline" :href="article.link" target="_blank">
                   <UIcon name="i-heroicons-link-16-solid" class="w-5 h-5"/>
                 </a>
               </td>
@@ -131,9 +131,9 @@
             </tbody>
           </table>
           <!-- 状态栏 -->
-          <div class="sticky bottom-0 h-[40px] bg-white flex items-center px-4 space-x-10 border-t-2 font-mono">
-            <span class="text-green-500">已选 {{ selectedArticles.length }} / {{ displayedArticles.length }}</span>
-            <span class="text-rose-300"
+          <div class="sticky bottom-0 h-[40px] bg-white dark:bg-gray-900 flex items-center px-4 space-x-10 border-t-2 border-gray-200 dark:border-gray-700 font-mono">
+            <span class="text-green-500 dark:text-green-400">已选 {{ selectedArticles.length }} / {{ displayedArticles.length }}</span>
+            <span class="text-rose-400 dark:text-rose-400"
                   v-if="deletedArticlesCount > 0">已隐藏 {{ deletedArticlesCount }} 条删除文章</span>
           </div>
         </div>
@@ -141,9 +141,9 @@
 
       <!-- 智能分批下载组件 -->
       <div v-if="showAutoBatchDownloader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-          <div class="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-            <h2 class="text-xl font-bold">智能分批下载管理器</h2>
+        <div class="bg-white dark:bg-gray-900 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div class="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">智能分批下载管理器</h2>
             <UButton
               color="gray"
               variant="ghost"
@@ -478,10 +478,28 @@ table th {
   padding: 0.5rem 0.25rem;
 }
 
-
 table td {
-  border: 1px solid #00002d17;
+  border: 1px solid rgba(0, 0, 45, 0.1);
   padding: 0.25rem 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  table td {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  th {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none;
+  }
+
+  tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
+  tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
 }
 
 td:first-child,
@@ -495,15 +513,15 @@ th:last-child {
 }
 
 th {
-  border: 1px solid #00002d17;
+  border: 1px solid rgba(0, 0, 45, 0.1);
   border-top: none;
 }
 
 tr:nth-child(even) {
-  background-color: #00005506;
+  background-color: rgba(0, 0, 85, 0.02);
 }
 
 tr:hover {
-  background-color: #00005506;
+  background-color: rgba(0, 0, 85, 0.02);
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="auto-batch-downloader bg-white rounded-lg shadow-md p-6">
+  <div class="auto-batch-downloader bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
     <!-- 头部标题 -->
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
         🚀 智能分批下载管理器
       </h2>
       <div class="flex items-center space-x-2">
@@ -17,13 +17,13 @@
     </div>
 
     <!-- 任务配置区域 -->
-    <div v-if="!isRunning" class="mb-6 p-4 bg-gray-50 rounded-lg">
-      <h3 class="text-lg font-semibold mb-4 text-gray-700">⚙️ 任务配置</h3>
+    <div v-if="!isRunning" class="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-200">⚙️ 任务配置</h3>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- 批次大小 -->
         <div>
-          <label class="block text-sm font-medium text-gray-600 mb-1">批次大小</label>
+          <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">批次大小</label>
           <URange
             v-model="config.batchSize"
             :min="1"
@@ -31,12 +31,12 @@
             :step="1"
             class="w-full"
           />
-          <div class="text-xs text-gray-500 mt-1">当前: {{ config.batchSize }} 篇/批次</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">当前: {{ config.batchSize }} 篇/批次</div>
         </div>
 
         <!-- 下载间隔 -->
         <div>
-          <label class="block text-sm font-medium text-gray-600 mb-1">下载间隔 (秒)</label>
+          <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">下载间隔 (秒)</label>
           <URange
             v-model="downloadDelaySeconds"
             :min="1"
@@ -44,12 +44,12 @@
             :step="1"
             class="w-full"
           />
-          <div class="text-xs text-gray-500 mt-1">当前: {{ downloadDelaySeconds }} 秒</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">当前: {{ downloadDelaySeconds }} 秒</div>
         </div>
 
         <!-- 最大重试次数 -->
         <div>
-          <label class="block text-sm font-medium text-gray-600 mb-1">最大重试次数</label>
+          <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">最大重试次数</label>
           <URange
             v-model="config.maxRetries"
             :min="1"
@@ -57,18 +57,18 @@
             :step="1"
             class="w-full"
           />
-          <div class="text-xs text-gray-500 mt-1">当前: {{ config.maxRetries }} 次</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">当前: {{ config.maxRetries }} 次</div>
         </div>
 
         <!-- 智能调节开关 -->
         <div class="flex items-center space-x-2">
           <UToggle v-model="config.autoAdjustBatchSize" />
-          <span class="text-sm text-gray-600">智能调节批次大小</span>
+          <span class="text-sm text-gray-600 dark:text-gray-300">智能调节批次大小</span>
         </div>
 
         <!-- 成功率阈值 -->
         <div v-if="config.autoAdjustBatchSize">
-          <label class="block text-sm font-medium text-gray-600 mb-1">成功率阈值 (%)</label>
+          <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">成功率阈值 (%)</label>
           <URange
             v-model="successRatePercent"
             :min="50"
@@ -76,7 +76,7 @@
             :step="5"
             class="w-full"
           />
-          <div class="text-xs text-gray-500 mt-1">当前: {{ successRatePercent }}%</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">当前: {{ successRatePercent }}%</div>
         </div>
       </div>
     </div>
@@ -84,61 +84,61 @@
     <!-- 整体进度显示 -->
     <div v-if="isRunning || overallState.status === 'completed'" class="mb-6">
       <div class="flex items-center justify-between mb-2">
-        <h3 class="text-lg font-semibold text-gray-700">📊 下载进度</h3>
-        <div class="text-sm text-gray-600">
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200">📊 下载进度</h3>
+        <div class="text-sm text-gray-600 dark:text-gray-300">
           {{ overallState.completedArticles }}/{{ overallState.totalArticles }} 篇文章
         </div>
       </div>
 
       <!-- 进度条 -->
-      <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+      <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4">
         <div
-          class="bg-blue-600 h-3 rounded-full transition-all duration-300"
+          class="bg-blue-600 dark:bg-blue-500 h-3 rounded-full transition-all duration-300"
           :style="{ width: `${overallState.overallProgress}%` }"
         ></div>
       </div>
 
       <!-- 详细信息 -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-        <div class="bg-blue-50 p-3 rounded-lg">
-          <div class="text-blue-600 font-semibold">当前批次</div>
-          <div class="text-lg">{{ overallState.currentBatchIndex + 1 }}/{{ overallState.totalBatches }}</div>
+        <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+          <div class="text-blue-600 dark:text-blue-400 font-semibold">当前批次</div>
+          <div class="text-lg text-gray-900 dark:text-gray-100">{{ overallState.currentBatchIndex + 1 }}/{{ overallState.totalBatches }}</div>
         </div>
 
-        <div class="bg-green-50 p-3 rounded-lg">
-          <div class="text-green-600 font-semibold">成功下载</div>
-          <div class="text-lg">{{ overallState.completedArticles }}</div>
+        <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+          <div class="text-green-600 dark:text-green-400 font-semibold">成功下载</div>
+          <div class="text-lg text-gray-900 dark:text-gray-100">{{ overallState.completedArticles }}</div>
         </div>
 
-        <div class="bg-red-50 p-3 rounded-lg">
-          <div class="text-red-600 font-semibold">失败文章</div>
-          <div class="text-lg">{{ overallState.failedArticles }}</div>
+        <div class="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
+          <div class="text-red-600 dark:text-red-400 font-semibold">失败文章</div>
+          <div class="text-lg text-gray-900 dark:text-gray-100">{{ overallState.failedArticles }}</div>
         </div>
 
-        <div class="bg-purple-50 p-3 rounded-lg">
-          <div class="text-purple-600 font-semibold">下载速度</div>
-          <div class="text-lg">{{ formatDownloadSpeed(overallState.downloadSpeed) }}</div>
+        <div class="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+          <div class="text-purple-600 dark:text-purple-400 font-semibold">下载速度</div>
+          <div class="text-lg text-gray-900 dark:text-gray-100">{{ formatDownloadSpeed(overallState.downloadSpeed) }}</div>
         </div>
       </div>
 
       <!-- 预估剩余时间 -->
-      <div v-if="overallState.estimatedTimeRemaining" class="mt-4 p-3 bg-yellow-50 rounded-lg">
-        <div class="text-yellow-800">
+      <div v-if="overallState.estimatedTimeRemaining" class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+        <div class="text-yellow-800 dark:text-yellow-200">
           🕒 预估剩余时间: {{ formatTime(overallState.estimatedTimeRemaining) }}
         </div>
       </div>
 
       <!-- 打包进度 -->
-      <div v-if="overallState.packingProgress !== undefined" class="mt-4 p-3 bg-indigo-50 rounded-lg">
+      <div v-if="overallState.packingProgress !== undefined" class="mt-4 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
         <div class="flex items-center justify-between mb-2">
-          <div class="text-indigo-800 font-semibold">📦 正在打包文件</div>
-          <div class="text-sm text-indigo-600">
+          <div class="text-indigo-800 dark:text-indigo-200 font-semibold">📦 正在打包文件</div>
+          <div class="text-sm text-indigo-600 dark:text-indigo-400">
             {{ overallState.packingCount || 0 }}/{{ overallState.completedArticles }} 篇文章
           </div>
         </div>
-        <div class="w-full bg-indigo-200 rounded-full h-2">
+        <div class="w-full bg-indigo-200 dark:bg-indigo-700 rounded-full h-2">
           <div
-            class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+            class="bg-indigo-600 dark:bg-indigo-500 h-2 rounded-full transition-all duration-300"
             :style="{ width: `${overallState.packingProgress}%` }"
           ></div>
         </div>
@@ -147,7 +147,7 @@
 
     <!-- 批次详情 -->
     <div v-if="tasks.length > 0" class="mb-6">
-      <h3 class="text-lg font-semibold mb-4 text-gray-700">📦 批次详情</h3>
+      <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-200">📦 批次详情</h3>
 
       <div class="max-h-80 overflow-y-auto space-y-2">
         <div
@@ -166,10 +166,10 @@
             </div>
 
             <div>
-              <div class="font-medium text-sm">
+              <div class="font-medium text-sm text-gray-900 dark:text-gray-100">
                 批次 {{ index + 1 }} ({{ task.articles.length }} 篇文章)
               </div>
-              <div class="text-xs text-gray-500">
+              <div class="text-xs text-gray-500 dark:text-gray-400">
                 {{ getTaskStatusText(task) }}
               </div>
             </div>
@@ -196,28 +196,28 @@
     </div>
 
     <!-- 统计信息 -->
-    <div v-if="tasks.length > 0" class="mb-6 p-4 bg-gray-50 rounded-lg">
-      <h3 class="text-lg font-semibold mb-3 text-gray-700">📈 统计信息</h3>
+    <div v-if="tasks.length > 0" class="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <h3 class="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-200">📈 统计信息</h3>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
         <div class="text-center">
-          <div class="text-2xl font-bold text-green-600">{{ downloadStats.completedBatches }}</div>
-          <div class="text-gray-600">完成批次</div>
+          <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ downloadStats.completedBatches }}</div>
+          <div class="text-gray-600 dark:text-gray-300">完成批次</div>
         </div>
 
         <div class="text-center">
-          <div class="text-2xl font-bold text-red-600">{{ downloadStats.failedBatches }}</div>
-          <div class="text-gray-600">失败批次</div>
+          <div class="text-2xl font-bold text-red-600 dark:text-red-400">{{ downloadStats.failedBatches }}</div>
+          <div class="text-gray-600 dark:text-gray-300">失败批次</div>
         </div>
 
         <div class="text-center">
-          <div class="text-2xl font-bold text-blue-600">{{ downloadStats.batchSuccessRate.toFixed(1) }}%</div>
-          <div class="text-gray-600">成功率</div>
+          <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ downloadStats.batchSuccessRate.toFixed(1) }}%</div>
+          <div class="text-gray-600 dark:text-gray-300">成功率</div>
         </div>
 
         <div class="text-center">
-          <div class="text-2xl font-bold text-purple-600">{{ downloadStats.totalRetries }}</div>
-          <div class="text-gray-600">总重试次数</div>
+          <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ downloadStats.totalRetries }}</div>
+          <div class="text-gray-600 dark:text-gray-300">总重试次数</div>
         </div>
       </div>
     </div>
@@ -297,20 +297,20 @@
     </div>
 
     <!-- 已完成的ZIP文件列表 -->
-    <div v-if="completedZipFiles.length > 0" class="mb-6 p-4 bg-green-50 rounded-lg">
-      <h3 class="text-lg font-semibold mb-3 text-green-700">📁 已完成的ZIP文件</h3>
+    <div v-if="completedZipFiles.length > 0" class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+      <h3 class="text-lg font-semibold mb-3 text-green-700 dark:text-green-300">📁 已完成的ZIP文件</h3>
 
       <div class="space-y-2">
         <div
           v-for="(zipFile, index) in completedZipFiles"
           :key="index"
-          class="flex items-center justify-between p-3 bg-white rounded-lg border border-green-200"
+          class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-green-200 dark:border-green-700"
         >
           <div class="flex items-center space-x-3">
-            <UIcon name="i-heroicons-archive-box" class="w-5 h-5 text-green-600" />
+            <UIcon name="i-heroicons-archive-box" class="w-5 h-5 text-green-600 dark:text-green-400" />
             <div>
-              <div class="font-medium text-sm">{{ zipFile.filename }}</div>
-              <div class="text-xs text-gray-500">
+              <div class="font-medium text-sm text-gray-900 dark:text-gray-100">{{ zipFile.filename }}</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">
                 批次 {{ zipFile.batchIndex + 1 }} • {{ zipFile.articleCount }} 篇文章 •
                 {{ formatTime(Date.now() - zipFile.createdAt) }}前
               </div>
@@ -332,14 +332,14 @@
         </div>
       </div>
 
-      <div class="mt-3 text-sm text-green-600">
+      <div class="mt-3 text-sm text-green-600 dark:text-green-400">
         💡 共 {{ completedZipFiles.length }} 个ZIP文件，包含 {{ completedZipFiles.reduce((sum, zip) => sum + zip.articleCount, 0) }} 篇文章
       </div>
     </div>
 
     <!-- 提示信息 -->
-    <div v-if="!selectedArticles.length && !isRunning" class="mt-6 p-4 bg-blue-50 rounded-lg">
-      <div class="text-blue-800 text-sm">
+    <div v-if="!selectedArticles.length && !isRunning" class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+      <div class="text-blue-800 dark:text-blue-200 text-sm">
         💡 请先在文章列表中选择要下载的文章，然后使用智能分批下载功能。
       </div>
     </div>
