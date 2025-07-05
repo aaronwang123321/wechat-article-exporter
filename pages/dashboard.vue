@@ -53,7 +53,7 @@
     </nav>
     <div class="flex flex-col w-full h-screen">
       <div class="flex h-[60px] flex-shrink-0 items-center justify-between border-b border-slate-6 px-6">
-        <div id="title"></div>
+        <div id="title" class="text-gray-900 dark:text-gray-100"></div>
 
         <div class="hidden md:flex items-center gap-4">
           <NuxtLink to="/"
