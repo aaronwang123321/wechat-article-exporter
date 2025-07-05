@@ -24,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@unhead/vue';
+
 useHead({
   title: '技术支持 | 微信公众号文章导出'
 });

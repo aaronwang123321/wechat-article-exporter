@@ -10,6 +10,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
+
 useHead({
   title: '缓存分析 | 微信公众号文章导出'
 });
@@ -22,5 +25,7 @@ async function init() {
   usage.value = indexedSize + 'M'
 }
 
-await init()
+onMounted(() => {
+  init()
+})
 </script>

@@ -109,8 +109,16 @@
 </template>
 
 <script setup lang="ts">
-import type {LoginAccount, ScanLoginResult, StartLoginResult} from "~/types/types";
+import type {LoginAccount, ScanLoginResult, StartLoginResult} from "../types/types";
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useHead } from '@unhead/vue';
 
+// 声明 Nuxt 全局函数的类型
+declare const useLoginAccount: () => any;
+declare const useActiveAccount: () => any;
+declare const navigateTo: (to: string, options?: any) => void;
+declare const useFetch: <T = any>(url: string, options?: any) => Promise<{ data: any; status: any; error: any }>;
+declare const $fetch: <T = any>(url: string, options?: any) => Promise<T>;
 
 const qrcodeSrc = ref('')
 const scanLoginType = ref(0)

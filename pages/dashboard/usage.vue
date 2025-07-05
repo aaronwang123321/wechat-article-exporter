@@ -10,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@unhead/vue';
+
 useHead({
   title: '资源额度 | 微信公众号文章导出'
 });

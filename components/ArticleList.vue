@@ -30,13 +30,20 @@
 </template>
 
 <script setup lang="ts">
-import type {AppMsgEx} from "~/types/types";
+import { ref, reactive, computed } from 'vue';
+import type {AppMsgEx} from "../types/types";
 import {Loader} from "lucide-vue-next";
 import {vElementVisibility} from "@vueuse/components"
-import {getArticleList} from '~/apis'
-import {getArticleCache, hitCache} from "~/store/article";
-import {getInfoCache} from "~/store/info";
-import {ARTICLE_LIST_PAGE_SIZE} from "~/config";
+import {getArticleList} from '../apis'
+import {getArticleCache, hitCache} from "../store/article";
+import {getInfoCache} from "../store/info";
+import {ARTICLE_LIST_PAGE_SIZE} from "../config";
+
+// 声明 Nuxt 全局函数的类型
+declare const useToast: () => any;
+declare const useLoginAccount: () => any;
+declare const useActiveAccount: () => any;
+declare const navigateTo: (to: string) => void;
 
 interface Props {
   hideDeleted?: boolean
@@ -81,7 +88,7 @@ async function loadData() {
 
 
     // 加载可用的缓存
-    const lastArticle = articles.at(-1)
+    const lastArticle = articles[articles.length - 1]
     if (lastArticle && !keyword.value) {
       // 检查是否存在比 lastArticle 更早的缓存数据
       if (await hitCache(fakeid, lastArticle.create_time)) {

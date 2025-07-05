@@ -123,14 +123,19 @@
 </template>
 
 <script setup lang="ts">
-import {getAllInfo, type Info} from "~/store/info";
-import {getArticleCache} from "~/store/article";
-import type {AppMsgAlbumInfo, DownloadableArticle} from "~/types/types";
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
+
+// 声明 $fetch 的类型
+declare const $fetch: <T = any>(url: string, options?: any) => Promise<T>
+import {getAllInfo, type Info} from "../../store/info";
+import {getArticleCache} from "../../store/article";
+import type {AppMsgAlbumInfo, DownloadableArticle} from "../../types/types";
 import {ArrowDownNarrowWide, ArrowUpNarrowWide, Loader} from "lucide-vue-next";
-import type {AppMsgAlbumResult, ArticleItem, BaseInfo} from "~/types/album";
+import type {AppMsgAlbumResult, ArticleItem, BaseInfo} from "../../types/album";
 import {vElementVisibility} from "@vueuse/components"
-import {useDownloadAlbum} from '~/composables/useBatchDownload'
-import {formatAlbumTime} from "~/utils/album";
+import {useDownloadAlbum} from '../../composables/useBatchDownload'
+import {formatAlbumTime} from "../../utils/album";
 
 
 useHead({
@@ -142,9 +147,14 @@ interface AccountInfo extends Info {
 }
 
 // 已缓存的公众号信息
-const cachedAccountInfos: AccountInfo[] = reactive(await getAllInfo())
-cachedAccountInfos.forEach(async accountInfo => {
-  accountInfo.albums = await getAllAlbums(accountInfo.fakeid)
+const cachedAccountInfos: AccountInfo[] = reactive([])
+
+onMounted(async () => {
+  const infos = await getAllInfo()
+  cachedAccountInfos.push(...infos)
+  cachedAccountInfos.forEach(async accountInfo => {
+    accountInfo.albums = await getAllAlbums(accountInfo.fakeid)
+  })
 })
 const sortedAccountInfos = computed(() => {
   cachedAccountInfos.sort((a, b) => {

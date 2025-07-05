@@ -86,7 +86,14 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import {Album, ChartNoAxesCombined, Download, Globe, Settings, HeartHandshake} from 'lucide-vue-next';
 import {formatDistance} from "date-fns";
-import type {LogoutResponse} from "~/types/types";
+import type {LogoutResponse} from "../types/types";
+
+// 声明 Nuxt 全局函数和组合式函数的类型
+declare const useRoute: () => any;
+declare const definePageMeta: (meta: any) => void;
+declare const useLoginAccount: () => any;
+declare const $fetch: <T = any>(url: string, options?: any) => Promise<T>;
+declare const navigateTo: (to: string, options?: any) => void;
 
 
 const route = useRoute()
