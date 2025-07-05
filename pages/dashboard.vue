@@ -57,15 +57,15 @@
 
         <div class="hidden md:flex items-center gap-4">
           <NuxtLink to="/"
-                    class="font-semibold inline-flex items-center justify-center border select-none border-slate-6 bg-slate-2 text-slate-12 hover:bg-slate-4 text-sm h-8 px-3 rounded-md gap-1">
+                    class="font-semibold inline-flex items-center justify-center border select-none border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm h-8 px-3 rounded-md gap-1">
             拉取文章缓存
           </NuxtLink>
           <a href="https://github.com/jooooock/wechat-article-exporter/blob/master/docs/faq.md" target="_blank"
-             class="font-semibold inline-flex items-center justify-center border select-none border-slate-6 bg-slate-2 text-slate-12 hover:bg-slate-4 text-sm h-8 px-3 rounded-md gap-1">
+             class="font-semibold inline-flex items-center justify-center border select-none border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm h-8 px-3 rounded-md gap-1">
             <span class="inline-flex items-center justify-center gap-1 truncate visible">FAQ</span>
           </a>
           <a href="https://github.com/jooooock/wechat-article-exporter" target="_blank"
-             class="font-semibold inline-flex items-center justify-center border select-none border-slate-6 bg-slate-2 text-slate-12 hover:bg-slate-4 text-sm h-8 px-3 rounded-md gap-1">
+             class="font-semibold inline-flex items-center justify-center border select-none border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700 text-sm h-8 px-3 rounded-md gap-1">
             <svg class="w-[18px] h-[18px]" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>
               GitHub</title>
               <path

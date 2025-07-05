@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <Teleport defer to="#title">
-      <h1 class="text-[28px] leading-[34px] text-slate-12 font-bold">文章导出 <span class="text-sm text-slate-10">导出本地已缓存的文章</span>
+      <h1 class="text-[28px] leading-[34px] text-gray-900 dark:text-gray-100 font-bold">文章导出 <span class="text-sm text-gray-600 dark:text-gray-400">导出本地已缓存的文章</span>
       </h1>
     </Teleport>
     <div class="flex flex-1 overflow-hidden">

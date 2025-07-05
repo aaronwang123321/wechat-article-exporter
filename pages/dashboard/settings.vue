@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <Teleport defer to="#title">
-      <h1 class="text-[28px] leading-[34px] text-slate-12 font-bold">设置</h1>
+      <h1 class="text-[28px] leading-[34px] text-gray-900 dark:text-gray-100 font-bold">设置</h1>
     </Teleport>
     <div class="flex-1 overflow-scroll">
       <CredentialSetting />

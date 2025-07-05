@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <Teleport defer to="#title">
-      <h1 class="text-[28px] leading-[34px] text-slate-12 font-bold">技术支持</h1>
+      <h1 class="text-[28px] leading-[34px] text-gray-900 dark:text-gray-100 font-bold">技术支持</h1>
     </Teleport>
     <div class="px-6 py-4 flex-1 overflow-scroll">
       <p class="my-2">感谢您使用我们的开源工具！</p>
