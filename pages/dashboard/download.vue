@@ -81,7 +81,11 @@
                   <span
                       v-if="batchDownloadPhase === '打包'">{{ batchPackedCount }}/{{ batchDownloadedCount }}</span>
                 </span>
-                <span v-else>打包下载</span>
+                <span v-else>普通批量下载</span>
+              </UButton>
+              <UButton color="blue" variant="solid" @click="showAutoBatchDownloader = !showAutoBatchDownloader">
+                <UIcon name="i-heroicons-cpu-chip" class="w-4 h-4 mr-2"/>
+                <span>智能分批下载</span>
               </UButton>
             </div>
           </div>
@@ -134,26 +138,66 @@
           </div>
         </div>
       </main>
+
+      <!-- 智能分批下载组件 -->
+      <div v-if="showAutoBatchDownloader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div class="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+            <h2 class="text-xl font-bold">智能分批下载管理器</h2>
+            <UButton
+              color="gray"
+              variant="ghost"
+              icon="i-heroicons-x-mark"
+              @click="showAutoBatchDownloader = false"
+            />
+          </div>
+
+          <div class="p-6">
+            <AutoBatchDownloader
+              :selected-articles="downloadableSelectedArticles"
+              :filename="selectedAccountName"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {getAllInfo, type Info} from '~/store/info'
-import {getArticleCache} from "~/store/article";
-import type {AppMsgEx, DownloadableArticle} from "~/types/types";
-import {formatTimeStamp} from "~/utils";
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useHead } from '@unhead/vue'
+import {getAllInfo, type Info} from '../../store/info'
+import {getArticleCache} from "../../store/article";
+import type {AppMsgEx, DownloadableArticle} from "../../types/types";
+import {formatTimeStamp} from "../../utils";
 import {Loader} from "lucide-vue-next";
 import {sleep} from "@antfu/utils";
 import {type Duration, format, isSameDay, sub} from 'date-fns'
-import {useBatchDownload} from "~/composables/useBatchDownload";
+import {useBatchDownload} from "../../composables/useBatchDownload";
 import ExcelJS from "exceljs";
 import {saveAs} from 'file-saver'
 
 
-interface Article extends AppMsgEx {
+interface Article {
   checked: boolean
   display: boolean
+  title: string
+  link: string
+  update_time: number
+  author_name: string
+  copyright_stat?: number
+  copyright_type?: number
+  appmsg_album_infos: Array<{ id: string; title: string }>
+  aid: string
+  digest: string
+  cover_img?: string
+  cover?: string
+  pic_cdn_url_235_1?: string
+  pic_cdn_url_16_9?: string
+  pic_cdn_url_3_4?: string
+  pic_cdn_url_1_1?: string
+  is_deleted?: boolean
 }
 
 useHead({
@@ -161,16 +205,25 @@ useHead({
 })
 
 // 已缓存的公众号信息
-const cachedAccountInfos = await getAllInfo()
+const cachedAccountInfos = ref<Info[]>([])
 const sortedAccountInfos = computed(() => {
-  cachedAccountInfos.sort((a, b) => {
+  const sorted = [...cachedAccountInfos.value]
+  sorted.sort((a, b) => {
     return a.articles > b.articles ? -1 : 1
   })
-  return cachedAccountInfos
+  return sorted
+})
+
+// 异步加载数据
+onMounted(async () => {
+  cachedAccountInfos.value = await getAllInfo()
 })
 
 const selectedAccount = ref('')
 const selectedAccountName = ref('')
+
+// 智能分批下载器状态
+const showAutoBatchDownloader = ref(false)
 
 async function toggleSelectedAccount(info: Info) {
   if (info.fakeid !== selectedAccount.value) {
@@ -192,6 +245,15 @@ const displayedArticles = computed(() => {
 })
 const selectedArticles = computed(() => {
   return articles.filter(article => article.checked && article.display)
+})
+
+// 转换为可下载的文章格式
+const downloadableSelectedArticles = computed(() => {
+  return selectedArticles.value.map(article => ({
+    title: article.title,
+    url: article.link,
+    date: +article.update_time
+  }))
 })
 const deletedArticlesCount = ref(0)
 
@@ -264,7 +326,7 @@ const articleAuthors = computed(() => {
   return [...new Set(articles.map(article => article.author_name).filter(author => !!author))]
 })
 const articleAlbums = computed(() => {
-  return [...new Set(articles.flatMap(article => article.appmsg_album_infos).map(album => album.title))]
+  return [...new Set(articles.flatMap((article: Article) => article.appmsg_album_infos).map(album => album.title))]
 })
 
 function isRangeSelected(duration: Duration) {
@@ -365,7 +427,7 @@ function excelExport() {
   }, 0)
 }
 
-async function exportToExcel(data: AppMsgEx[]) {
+async function exportToExcel(data: Article[]) {
   // 创建工作簿和工作表
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet1');
