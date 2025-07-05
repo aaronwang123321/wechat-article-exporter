@@ -177,18 +177,18 @@
 
           <div class="flex items-center space-x-2">
             <!-- 进度显示 -->
-            <div v-if="task.status === 'running'" class="text-xs text-blue-600">
+            <div v-if="task.status === 'running'" class="text-xs text-blue-600 dark:text-blue-400">
               {{ task.completedCount }}/{{ task.articles.length }}
             </div>
 
             <!-- 重试次数 -->
-            <div v-if="task.retryCount > 0" class="text-xs text-orange-600">
+            <div v-if="task.retryCount > 0" class="text-xs text-orange-600 dark:text-orange-400">
               重试 {{ task.retryCount }}
             </div>
 
             <!-- 错误信息 -->
             <UTooltip v-if="task.error" :text="task.error">
-              <UIcon name="i-heroicons-exclamation-triangle" class="w-4 h-4 text-red-500" />
+              <UIcon name="i-heroicons-exclamation-triangle" class="w-4 h-4 text-red-500 dark:text-red-400" />
             </UTooltip>
           </div>
         </div>
@@ -485,14 +485,14 @@ function getStatusText(status: string): string {
 
 function getTaskBgClass(status: string): string {
   const classes: Record<string, string> = {
-    pending: 'bg-gray-50 border-gray-200',
-    running: 'bg-blue-50 border-blue-200',
-    paused: 'bg-orange-50 border-orange-200',
-    completed: 'bg-green-50 border-green-200',
-    failed: 'bg-red-50 border-red-200',
-    cancelled: 'bg-gray-50 border-gray-200'
+    pending: 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
+    running: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700',
+    paused: 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-700',
+    completed: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700',
+    failed: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700',
+    cancelled: 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
   };
-  return classes[status] || 'bg-gray-50 border-gray-200';
+  return classes[status] || 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700';
 }
 
 function getTaskIcon(status: string): string {
@@ -509,14 +509,14 @@ function getTaskIcon(status: string): string {
 
 function getTaskIconClass(status: string): string {
   const classes: Record<string, string> = {
-    pending: 'text-gray-500',
-    running: 'text-blue-500 animate-spin',
-    paused: 'text-orange-500',
-    completed: 'text-green-500',
-    failed: 'text-red-500',
-    cancelled: 'text-gray-500'
+    pending: 'text-gray-500 dark:text-gray-400',
+    running: 'text-blue-500 dark:text-blue-400 animate-spin',
+    paused: 'text-orange-500 dark:text-orange-400',
+    completed: 'text-green-500 dark:text-green-400',
+    failed: 'text-red-500 dark:text-red-400',
+    cancelled: 'text-gray-500 dark:text-gray-400'
   };
-  return classes[status] || 'text-gray-500';
+  return classes[status] || 'text-gray-500 dark:text-gray-400';
 }
 
 function getTaskStatusText(task: any): string {
@@ -583,5 +583,20 @@ function formatDownloadSpeed(speed?: number): string {
 
 .max-h-80::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* 暗色模式下的滚动条 */
+@media (prefers-color-scheme: dark) {
+  .max-h-80::-webkit-scrollbar-track {
+    background: #374151;
+  }
+
+  .max-h-80::-webkit-scrollbar-thumb {
+    background: #6b7280;
+  }
+
+  .max-h-80::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
 }
 </style>
