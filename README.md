@@ -1,6 +1,6 @@
-<p align="center">
-  <img src="./assets/logo.svg" alt="Logo">
-</p>
+<h2>智能分批下载和断点续传增强版本</h2>
+<img width="862" alt="image" src="https://github.com/user-attachments/assets/f4602c6c-6748-4ca4-8001-1a814b8190e3" />
+
 
 # wechat-article-exporter
 
